@@ -1,9 +1,9 @@
 {
-    "name": "ᴀʟᴘʜᴀ ʙᴀɴ ᴀʟʟ",
+    "name": "sᴀᴛʏᴀ ʙᴀɴ ᴀʟʟ",
     "description": "sɪᴍᴘʟᴇ ʙᴏᴛ ᴛᴏ ʙᴀɴ ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴛʜᴇ ᴡʜᴏʟᴇ ᴄʜᴀᴛs",
-    "logo": "https://graph.org/file/bbae2c50b58056ecc4df7.jpg",
-    "keywords": ["ᴛᴇᴀᴍ-ᴘᴜʀᴠɪ", "ʙᴀɴ-ᴀʟʟ"],
-    "repository": "https://github.com/TEAMPURVI/ALPHA_BANALL",
+    "logo": "https://files.catbox.moe/f932t8.jpg",
+    "keywords": ["˹ ʙᴀʙʏ-ᴍᴜsɪᴄ ™˼", "ʙᴀɴ-ᴀʟʟ"],
+    "repository": "https://github.com/BABY-MUSIC/SATYA_BANALL",
     "stack": "container",
     "env": {
         "BOT_TOKEN": {
@@ -11,7 +11,7 @@
             "required": true
         },
         "OWNER": {
-            "description": "ᴛʏᴘᴇ ʏᴏᴜʀ ᴜsᴇʀɴᴀᴍᴇ ᴡɪᴛʜᴏᴜᴛ @ ll_ALPHA_BABY_lll",
+            "description": "ᴛʏᴘᴇ ʏᴏᴜʀ ᴜsᴇʀɴᴀᴍᴇ ᴡɪᴛʜᴏᴜᴛ @ [UTTAM470]",
             "required": true,
             "value": ""
         },
