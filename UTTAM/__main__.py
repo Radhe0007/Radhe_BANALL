@@ -20,10 +20,10 @@ def home():
     return "Flask app is running on port 8000!"
 
 # Config vars
-API_ID = int(os.getenv("API_ID"))
-API_HASH = os.getenv("API_HASH")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-OWNER = os.getenv("OWNER")
+API_ID = int(os.getenv("API_ID", "16457832"))
+API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
+OWNER = os.getenv("OWNER", "BABY09_WORLD")
 
 # Pyrogram client
 app_pyrogram = Client(
