@@ -54,6 +54,7 @@ async def send_startup_message():
 async def start_command(client: Client, message: Message):
     user_mention = message.from_user.mention  # यूजर का मेंशन नाम प्राप्त करें
     try:
+        logging.info("Received /start command")
         # बॉट का संदेश उपयोगकर्ता को भेजें
         await message.reply_photo(
             photo=f"https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
