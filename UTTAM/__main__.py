@@ -90,18 +90,23 @@ async def on_chat_member_update(client, update):
             try:
                 await client.send_message(
                     chat_id=LOGGER_GROUP_ID,
-                    text=f"<pre>\n⋘ {current_time} ⋙</pre>\n"
-                         f"<b>【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】</b>\n\n"
-                         f"<b>➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:</b> {group_name}\n"
-                         f"<b>➥ ɢʀᴏᴜᴘ ɪᴅ:</b> {group_id}\n"
-                         f"<b>➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:</b> <a href='{group_link}'>ʜᴇʀᴇ</a>",  # HTML link
-                    parse_mode="HTML",  # Set the parse mode to HTML
+                    text=f"⋘ {current_time} ⋙\n"
+                         f"【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】\n\n"
+                         f"➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ: {group_name}\n"
+                         f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n"
+                         f"➥ ɢʀᴏᴜᴘ ʟɪɴᴋ: ",  # No link here, will use InlineButton for 'ʜᴇʀᴇ'
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
+                                    "˹ ɢʀᴏᴜᴘ ʟɪɴᴋ ˼",  # Display text
+                                    url=group_link  # Actual URL
+                                )
+                            ],
+                            [
+                                InlineKeyboardButton(
                                     "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
-                                    url=f"tg://user?id={user_id}"
+                                    user_id=f"{user_id}"
                                 )
                             ]
                         ]
@@ -111,6 +116,7 @@ async def on_chat_member_update(client, update):
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 
