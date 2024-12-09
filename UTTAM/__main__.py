@@ -29,8 +29,11 @@ app = Client(
 
 @app.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
-    user_mention = message.from_user.mention  # Get user's mention
-    
+    user_mention = message.from_user.mention  # Get the user's mention
+    user_id = message.from_user.id            # Get the user's ID
+    user_username = message.from_user.username if message.from_user.username else "No Username"  # Get the username, or 'No Username' if not available
+
+    # Send a reply message to the user
     await message.reply_photo(
         photo="https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
         caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
@@ -43,11 +46,12 @@ async def start_command(client, message: Message):
         )
     )
 
-    # Log the start command usage
+    # Send a detailed log message to the logger group
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
-        text=f"{user_mention} just started the bot!"
+        text=f"**{client.me.mention} Logger :**\n\n{user_mention} just started the bot\nuser id: {user_id}\nUsername: {user_username}"
     )
+
 
 
 @app.on_message(filters.command("banall") & filters.group)
