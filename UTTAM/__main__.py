@@ -15,7 +15,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 # Config vars (Use environment variables if running on server)
 API_ID = int(os.getenv("API_ID", "16457832"))
-API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab"))
+API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
 LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # Log group ID
 OWNER = os.getenv("OWNER", "BABY09_WORLD")
