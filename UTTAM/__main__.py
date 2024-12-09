@@ -5,7 +5,6 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from flask import Flask
 import threading
 import asyncio
-from aiohttp import web
 
 # लॉगिंग सेटअप
 logging.basicConfig(
@@ -89,12 +88,8 @@ async def banall_command(client: Client, message: Message):
     print("Process completed")
 
 # Flask और Pyrogram बॉट रन करना
-async def run_flask():
-    loop = asyncio.get_event_loop()
-    runner = web.AppRunner(app_flask)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 8000)
-    await site.start()
+def run_flask():
+    app_flask.run(host="0.0.0.0", port=8000, use_reloader=False)
 
 # Main entry point for async Pyrogram bot
 async def run_pyrogram():
@@ -104,12 +99,13 @@ async def run_pyrogram():
     await idle()
 
 # Main function to run both Flask and Pyrogram
-async def main():
-    # Start Flask and Pyrogram simultaneously
-    flask_task = asyncio.create_task(run_flask())
-    pyrogram_task = asyncio.create_task(run_pyrogram())
-    
-    await asyncio.gather(flask_task, pyrogram_task)
+def main():
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+
+    # Run the Pyrogram bot
+    asyncio.run(run_pyrogram())
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
