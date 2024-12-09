@@ -36,16 +36,17 @@ app_pyrogram = Client(
 )
 
 # Function to send message to Logger Group on bot startup
-def send_startup_message():
-    with app_pyrogram:
-        bot = app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
-        app_pyrogram.send_message(
-            chat_id=LOGGER_GROUP_ID,
-            text=f"**Bot Started**\n\n"
-                 f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"  # Name को mention करें
-                 f"**ID:** `{bot.id}`\n"
-                 f"**Username:** @{bot.username}"
-        )
+# Function to send message to Logger Group on bot startup
+async def send_startup_message():
+    bot = await app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
+    await app_pyrogram.send_message(
+        chat_id=LOGGER_GROUP_ID,
+        text=f"**Bot Started**\n\n"
+             f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"  # Name को mention करें
+             f"**ID:** `{bot.id}`\n"
+             f"**Username:** @{bot.username}"
+    )
+
 
 # बॉट के कमांड हैंडलर्स
 @app_pyrogram.on_message(filters.command("start") & filters.private)
@@ -84,11 +85,12 @@ async def banall_command(client, message: Message):
 def run_flask():
     app_flask.run(host="0.0.0.0", port=8000)
 
-def run_pyrogram():
-    app_pyrogram.start()
+async def run_pyrogram():
+    await app_pyrogram.start()
     print("Banall-Bot Booted Successfully")
-    send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
-    idle()
+    await send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
+    await idle()
+
 
 flask_thread = threading.Thread(target=run_flask)
 flask_thread.start()
