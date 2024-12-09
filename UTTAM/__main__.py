@@ -64,7 +64,7 @@ async def start_command(client, message: Message):
         text=f"```\n⋘ {current_time} ⋙```\n**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}"
     )
 
-@app.on_chat_member_updated()
+
 @app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
     # Log the raw event update
