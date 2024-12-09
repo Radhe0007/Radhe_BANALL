@@ -86,7 +86,7 @@ async def on_chat_member_update(client, update):
             elif update.new_chat_member.status == "administrator":
                 logging.info(f"Bot promoted as admin in the group: {group_name}")
 
-            # Send log message to the logger group
+            # Send log message to the logger group with a clickable link
             try:
                 await client.send_message(
                     chat_id=LOGGER_GROUP_ID,
@@ -94,13 +94,14 @@ async def on_chat_member_update(client, update):
                          f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】**\n\n"
                          f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
                          f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
-                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
+                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",  # Markdown link
+                    parse_mode="Markdown",  # Set the parse mode to Markdown
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
-                                    "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
-                                    url=f"tg://user?id={user_id}"
+                                    "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
+                                    user_id=f"{user_id}"
                                 )
                             ]
                         ]
