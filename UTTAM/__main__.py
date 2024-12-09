@@ -66,8 +66,13 @@ async def start_command(client, message: Message):
 
 @app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
+    # Log the raw event update to understand its structure
+    logging.info(f"Received chat member update: {update}")
+
     # Ensure that new_chat_member is not None and check for status
     if update.new_chat_member:
+        logging.info(f"New chat member: {update.new_chat_member.user.username} with status: {update.new_chat_member.status}")
+
         # Check if the status of the new member is "member" (indicating the bot was added)
         if update.new_chat_member.status == "member":
             new_member = update.new_chat_member.user
@@ -79,7 +84,7 @@ async def on_chat_member_update(client, update):
 
                 current_time = get_indian_time()
 
-                # Debugging log to check if the event is triggered and data is correct
+                # Log the group information
                 logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
 
                 # Send the log message to the logger group
