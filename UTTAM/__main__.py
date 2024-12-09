@@ -46,12 +46,12 @@ async def start_command(client, message: Message):
 
     # Send a reply message to the user
     await message.reply_photo(
-        photo="https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
+        photo="https://files.catbox.moe/3zu85t.jpg",
         caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("ᴏᴡɴᴇʀ ᴀʟᴘʜ", url=f"https://t.me/{OWNER}")
+                    InlineKeyboardButton("˹ ʙᴀʙʏ-ᴍᴜsɪᴄ ™˼𓅂│ᴜᴘᴅᴀᴛᴇ│", url=f"https://t.me/{OWNER}")
                 ]       
             ]
         )
@@ -60,7 +60,7 @@ async def start_command(client, message: Message):
     # Send a detailed log message to the logger group with user info
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
-        text=f"**{client.me.mention} Logger :**\n\n{user_mention} just started the bot\nuser id: {user_id}\nUsername: {user_username}"
+        text=f"**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}\n**➥ ᴛɪᴍᴇ:**{current_time}"
     )
 
 
@@ -85,10 +85,10 @@ async def send_startup_log(client):
     # Send the startup log message to the logger group
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
-        text=f"**{bot_mention} started**\n"
-             f"id: {bot_id}\n"
-             f"username: {bot_username}\n"
-             f"Time: {current_time}"
+        text=f"**【{bot_mention} sᴛᴀʀᴛᴇᴅ】**\n"
+             f"⤥ɪᴅ: {bot_id}\n"
+             f"⤥ᴜsᴇʀɴᴀᴍᴇ: {bot_username}\n"
+             f"⤥ᴛɪᴍᴇ: {current_time}"
     )
 
 
