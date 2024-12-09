@@ -5,6 +5,7 @@ from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from flask import Flask
 import threading
+import asyncio
 
 # लॉगिंग सेटअप
 logging.basicConfig(
@@ -36,7 +37,6 @@ app_pyrogram = Client(
 )
 
 # Function to send message to Logger Group on bot startup
-# Function to send message to Logger Group on bot startup
 async def send_startup_message():
     bot = await app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
     await app_pyrogram.send_message(
@@ -46,7 +46,6 @@ async def send_startup_message():
              f"**ID:** `{bot.id}`\n"
              f"**Username:** @{bot.username}"
     )
-
 
 # बॉट के कमांड हैंडलर्स
 @app_pyrogram.on_message(filters.command("start") & filters.private)
@@ -91,8 +90,9 @@ async def run_pyrogram():
     await send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
     await idle()
 
-
 flask_thread = threading.Thread(target=run_flask)
 flask_thread.start()
 
-run_pyrogram()
+# Main entry point for async Pyrogram bot
+if __name__ == "__main__":
+    asyncio.run(run_pyrogram())
