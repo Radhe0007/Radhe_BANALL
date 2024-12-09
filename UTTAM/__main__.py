@@ -15,7 +15,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 # Config vars (Use environment variables if running on server)
 API_ID = int(os.getenv("API_ID", "16457832"))
-API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
+API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab"))
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
 LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # Log group ID
 OWNER = os.getenv("OWNER", "BABY09_WORLD")
@@ -60,8 +60,7 @@ async def start_command(client, message: Message):
 
 
 # Send a startup log message to the logger group when the bot starts
-@app.on_start()
-async def on_start(client):
+async def send_startup_log(client):
     bot_mention = client.me.mention
     bot_id = client.me.id
     bot_username = client.me.username if client.me.username else "No Username"
@@ -76,8 +75,11 @@ async def on_start(client):
              f"Time: {current_time}"
     )
 
+
 # Start the bot
 if __name__ == "__main__":
-    app.start()
+    app.start()  # Start the client
+    # Send the startup log message after the bot starts
+    app.loop.run_until_complete(send_startup_log(app)) 
     logging.info("Banall-Bot Booted Successfully")
     idle()
