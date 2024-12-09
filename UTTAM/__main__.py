@@ -64,6 +64,36 @@ async def start_command(client, message: Message):
         text=f"```\n⋘ {current_time} ⋙```\n**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}"
     )
 
+@app.on_chat_member_update(filters.new_chat_members)
+async def on_bot_added_to_group(client, message: Message):
+    for new_member in message.new_chat_members:
+        if new_member.id == client.me.id:  # Check if the new member is the bot
+            user_id = message.from_user.id if message.from_user else "Unknown"
+            group_name = message.chat.title
+            group_id = message.chat.id
+            group_link = f"https://t.me/{message.chat.username}" if message.chat.username else "No Link"
+
+            current_time = get_indian_time()
+
+            # Send the log message to the logger group
+            await client.send_message(
+                chat_id=LOGGER_GROUP_ID,
+                text=f"```\n⋘ {current_time} ⋙```\n"
+                     f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
+                     f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
+                     f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
+                     f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
+                                url=f"tg://user?id={user_id}"
+                            )
+                        ]
+                    ]
+                )
+            )
 
 @app.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
