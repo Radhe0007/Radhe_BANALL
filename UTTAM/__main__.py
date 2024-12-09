@@ -75,9 +75,25 @@ async def on_chat_member_update(client, update):
             user_id = update.from_user.id if update.from_user else "Unknown"
             group_name = update.chat.title
             group_id = update.chat.id
-            group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
-            current_time = get_indian_time()
+            group_link = None  # Default to None for link
+            
+            # Check if the bot has permission to generate invite link (admin in a private group)
+            if update.chat.username:
+                # Public group, use the username for link
+                group_link = f"https://t.me/{update.chat.username}"
+            else:
+                # Private group, check if the bot is an admin
+                try:
+                    chat_admins = await client.get_chat_administrators(group_id)
+                    if any(admin.user.id == client.me.id for admin in chat_admins):
+                        # Bot is an admin, generate invite link
+                        group_link = await client.export_chat_invite_link(group_id)
+                    else:
+                        group_link = "No Link Available"
+                except Exception as e:
+                    group_link = "Failed to generate link"
 
+            current_time = get_indian_time()
             logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
 
             # Check if the bot was added as a member or promoted to admin
@@ -86,6 +102,22 @@ async def on_chat_member_update(client, update):
             elif update.new_chat_member.status == "administrator":
                 logging.info(f"Bot promoted as admin in the group: {group_name}")
 
+            # Prepare the inline button with the generated link or fallback
+            keyboard_buttons = [
+                [
+                    InlineKeyboardButton(
+                        "˹ ɢʀᴏᴜᴘ ʟɪɴᴋ ˼",  # Display text
+                        url=group_link  # Set the invite link or fallback
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
+                        user_id=f"{user_id}"
+                    )
+                ]
+            ]
+
             # Send log message to the logger group with a clickable link
             try:
                 await client.send_message(
@@ -93,29 +125,14 @@ async def on_chat_member_update(client, update):
                     text=f"⋘ {current_time} ⋙\n"
                          f"【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】\n\n"
                          f"➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ: {group_name}\n"
-                         f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n"
-                         f"➥ ɢʀᴏᴜᴘ ʟɪɴᴋ: ",  # No link here, will use InlineButton for 'ʜᴇʀᴇ'
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    "˹ ɢʀᴏᴜᴘ ʟɪɴᴋ ˼",  # Display text
-                                    url=group_link  # Actual URL
-                                )
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
-                                    user_id=f"{user_id}"
-                                )
-                            ]
-                        ]
-                    )
+                         f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n",
+                    reply_markup=InlineKeyboardMarkup(keyboard_buttons)
                 )
                 logging.info(f"Log message sent successfully for group: {group_name}")
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 
