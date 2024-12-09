@@ -1,9 +1,10 @@
 import os
 import logging
-from os import getenv
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import ChatAdminRequired
+from datetime import datetime
+import pytz
 
 # Logging configuration
 logging.basicConfig(
@@ -27,6 +28,11 @@ app = Client(
     bot_token=BOT_TOKEN,
 )
 
+# Function to get current time in IST (Indian Standard Time)
+def get_indian_time():
+    tz = pytz.timezone("Asia/Kolkata")
+    return datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
+
 @app.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
     user_mention = message.from_user.mention  # Get the user's mention
@@ -46,33 +52,29 @@ async def start_command(client, message: Message):
         )
     )
 
-    # Send a detailed log message to the logger group
+    # Send a detailed log message to the logger group with user info
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
         text=f"**{client.me.mention} Logger :**\n\n{user_mention} just started the bot\nuser id: {user_id}\nUsername: {user_username}"
     )
 
 
+# Send a startup log message to the logger group when the bot starts
+@app.on_start()
+async def on_start(client):
+    bot_mention = client.me.mention
+    bot_id = client.me.id
+    bot_username = client.me.username if client.me.username else "No Username"
+    current_time = get_indian_time()  # Get the current time in IST
 
-@app.on_message(filters.command("banall") & filters.group)
-async def banall_command(client, message: Message):
-    # Log the group ID where the banall command was used
-    logging.info(f"Getting members from {message.chat.id}")
-    
-    try:
-        async for member in app.get_chat_members(message.chat.id):
-            try:
-                # Attempt to ban each member
-                await app.ban_chat_member(chat_id=message.chat.id, user_id=member.user.id)
-                logging.info(f"Banned {member.user.id} from {message.chat.id}")
-            except ChatAdminRequired:
-                logging.warning(f"Bot is not an admin in {message.chat.id}, cannot ban members.")
-            except Exception as e:
-                logging.error(f"Failed to ban {member.user.id} from {message.chat.id}: {e}")
-        logging.info("Ban all process completed.")
-    except Exception as e:
-        logging.error(f"Error during banning members in {message.chat.id}: {e}")
-
+    # Send the startup log message to the logger group
+    await client.send_message(
+        chat_id=LOGGER_GROUP_ID,
+        text=f"**{bot_mention} started**\n"
+             f"id: {bot_id}\n"
+             f"username: {bot_username}\n"
+             f"Time: {current_time}"
+    )
 
 # Start the bot
 if __name__ == "__main__":
