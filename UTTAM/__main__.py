@@ -1,6 +1,5 @@
 import os
 import logging
-from os import getenv
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from flask import Flask
@@ -36,13 +35,13 @@ app_pyrogram = Client(
     bot_token=BOT_TOKEN,
 )
 
-# Function to send message to Logger Group on bot startup
+# Function to send startup message
 async def send_startup_message():
     bot = await app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
     await app_pyrogram.send_message(
         chat_id=LOGGER_GROUP_ID,
         text=f"**Bot Started**\n\n"
-             f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"  # Name को mention करें
+             f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"
              f"**ID:** `{bot.id}`\n"
              f"**Username:** @{bot.username}"
     )
@@ -64,10 +63,14 @@ async def start_command(client, message: Message):
         )
     )
     # लॉगर ग्रुप में मैसेज भेजें
-    await client.send_message(
-        chat_id=LOGGER_GROUP_ID,
-        text=f"{user_mention} just started the bot!"
-    )
+    try:
+        await client.send_message(
+            chat_id=LOGGER_GROUP_ID,
+            text=f"{user_mention} just started the bot!"
+        )
+        logging.info("Logger message sent successfully.")
+    except Exception as e:
+        logging.error(f"Failed to send logger message: {e}")
 
 @app_pyrogram.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
@@ -90,6 +93,7 @@ async def run_pyrogram():
     await send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
     await idle()
 
+# Flask थ्रेड में चलाएं
 flask_thread = threading.Thread(target=run_flask)
 flask_thread.start()
 
