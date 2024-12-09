@@ -66,37 +66,38 @@ async def start_command(client, message: Message):
 
 @app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
-    # Check if a new member was added
-    if update.new_chat_member.status == "member":
-        new_member = update.new_chat_member.user
-        if new_member.id == client.me.id:  # Check if the new member is the bot
-            user_id = update.from_user.id if update.from_user else "Unknown"
-            group_name = update.chat.title
-            group_id = update.chat.id
-            group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
+    # Ensure that new_chat_member is not None and check for status
+    if update.new_chat_member:
+        # Check if the status of the new member is "member" (indicating the bot was added)
+        if update.new_chat_member.status == "member":
+            new_member = update.new_chat_member.user
+            if new_member.id == client.me.id:  # Check if the new member is the bot
+                user_id = update.from_user.id if update.from_user else "Unknown"
+                group_name = update.chat.title
+                group_id = update.chat.id
+                group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
 
-            current_time = get_indian_time()
+                current_time = get_indian_time()
 
-            # Send the log message to the logger group
-            await client.send_message(
-                chat_id=LOGGER_GROUP_ID,
-                text=f"```\n⋘ {current_time} ⋙```\n"
-                     f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
-                     f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
-                     f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
-                     f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
-                reply_markup=InlineKeyboardMarkup(
-                    [
+                # Send the log message to the logger group
+                await client.send_message(
+                    chat_id=LOGGER_GROUP_ID,
+                    text=f"```\n⋘ {current_time} ⋙```\n"
+                         f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
+                         f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
+                         f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
+                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
+                    reply_markup=InlineKeyboardMarkup(
                         [
-                            InlineKeyboardButton(
-                                "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
-                                url=f"tg://user?id={user_id}"
-                            )
+                            [
+                                InlineKeyboardButton(
+                                    "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
+                                    url=f"tg://user?id={user_id}"
+                                )
+                            ]
                         ]
-                    ]
+                    )
                 )
-            )
-
 
 @app.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
