@@ -64,12 +64,12 @@ async def start_command(client, message: Message):
         text=f"```\n⋘ {current_time} ⋙```\n**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}"
     )
 
-
 @app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
     # Log the raw event update
     logging.info(f"Received chat member update: {update}")
 
+    # When the bot is added or promoted
     if update.new_chat_member:
         # Check if the bot is added as a member or promoted to admin
         if update.new_chat_member.user.id == client.me.id:
@@ -86,7 +86,6 @@ async def on_chat_member_update(client, update):
                 try:
                     chat_admins = await client.get_chat_administrators(group_id)
                     if any(admin.user.id == client.me.id for admin in chat_admins):
-                        # Bot is an admin, try to generate the invite link
                         try:
                             group_link = await client.export_chat_invite_link(group_id)
                             logging.info(f"Invite link generated: {group_link}")
@@ -158,9 +157,8 @@ async def on_chat_member_update(client, update):
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
 
-
-
-elif update.old_chat_member and update.old_chat_member.user.id == client.me.id:
+    # When the bot is removed or leaves
+    elif update.old_chat_member and update.old_chat_member.user.id == client.me.id:
         group_name = update.chat.title
         group_id = update.chat.id
         current_time = get_indian_time()
@@ -196,6 +194,7 @@ elif update.old_chat_member and update.old_chat_member.user.id == client.me.id:
 
         except Exception as e:
             logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 
