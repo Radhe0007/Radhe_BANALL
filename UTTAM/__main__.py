@@ -38,49 +38,53 @@ app_pyrogram = Client(
 # Function to send startup message
 async def send_startup_message():
     bot = await app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
-    await app_pyrogram.send_message(
-        chat_id=LOGGER_GROUP_ID,
-        text=f"**Bot Started**\n\n"
-             f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"
-             f"**ID:** `{bot.id}`\n"
-             f"**Username:** @{bot.username}"
-    )
-
-# बॉट के कमांड हैंडलर्स
-@app_pyrogram.on_message(filters.command("start") & filters.private)
-async def start_command(client, message: Message):
-    user_mention = message.from_user.mention  # यूजर का मेंशन नाम प्राप्त करें
-    await message.reply_photo(
-        photo=f"https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
-        caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Cʜᴇᴄᴋ ❍ᴡɴᴇʀ", url=f"https://t.me/{OWNER}")
-                ]       
-            ]
-        )
-    )
-    # लॉगर ग्रुप में मैसेज भेजें
     try:
         await app_pyrogram.send_message(
             chat_id=LOGGER_GROUP_ID,
+            text=f"**Bot Started**\n\n"
+                 f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"
+                 f"**ID:** `{bot.id}`\n"
+                 f"**Username:** @{bot.username}"
+        )
+    except Exception as e:
+        logging.error(f"Failed to send startup message: {e}")
+
+# /start कमांड का हैंडलर
+@app_pyrogram.on_message(filters.command("start") & filters.private)
+async def start_command(client: Client, message: Message):
+    user_mention = message.from_user.mention  # यूजर का मेंशन नाम प्राप्त करें
+    try:
+        # बॉट का संदेश उपयोगकर्ता को भेजें
+        await message.reply_photo(
+            photo=f"https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
+            caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "Cʜᴇᴄᴋ ❍ᴡɴᴇʀ", url=f"https://t.me/{OWNER}")
+                    ]
+                ]
+            )
+        )
+        # लॉगर ग्रुप में संदेश भेजें
+        await client.send_message(
+            chat_id=LOGGER_GROUP_ID,
             text=f"{user_mention} just started the bot!"
         )
-        logging.info("Logger message sent successfully.")
+        logging.info(f"Start command logged for {message.from_user.id}")
     except Exception as e:
-        logging.error(f"Failed to send logger message: {e}")
+        logging.error(f"Failed to handle start command: {e}")
 
 @app_pyrogram.on_message(filters.command("banall") & filters.group)
-async def banall_command(client, message: Message):
-    print("Getting members from {}".format(message.chat.id))
-    async for i in app_pyrogram.get_chat_members(message.chat.id):
+async def banall_command(client: Client, message: Message):
+    print(f"Getting members from {message.chat.id}")
+    async for member in client.get_chat_members(message.chat.id):
         try:
-            await app_pyrogram.ban_chat_member(chat_id=message.chat.id, user_id=i.user.id)
-            print("Kicked {} from {}".format(i.user.id, message.chat.id))
+            await client.ban_chat_member(chat_id=message.chat.id, user_id=member.user.id)
+            print(f"Kicked {member.user.id} from {message.chat.id}")
         except Exception as e:
-            print("Failed to kick {}: {}".format(i.user.id, e))
+            print(f"Failed to kick {member.user.id}: {e}")
     print("Process completed")
 
 # Flask और Pyrogram बॉट रन करना
