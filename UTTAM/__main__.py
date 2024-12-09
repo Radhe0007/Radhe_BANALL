@@ -6,6 +6,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from flask import Flask
 import threading
 
+# लॉगिंग सेटअप
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -23,6 +24,7 @@ def home():
 API_ID = int(os.getenv("API_ID", "16457832"))
 API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
+LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # लॉगर ग्रुप ID
 OWNER = os.getenv("OWNER", "BABY09_WORLD")
 
 # Pyrogram client
@@ -33,10 +35,22 @@ app_pyrogram = Client(
     bot_token=BOT_TOKEN,
 )
 
-@app_pyrogram.on_message(
-    filters.command("start") & filters.private            
-)
+# Function to send message to Logger Group on bot startup
+def send_startup_message():
+    with app_pyrogram:
+        bot = app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
+        app_pyrogram.send_message(
+            chat_id=LOGGER_GROUP_ID,
+            text=f"**Bot Started**\n\n"
+                 f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"  # Name को mention करें
+                 f"**ID:** `{bot.id}`\n"
+                 f"**Username:** @{bot.username}"
+        )
+
+# बॉट के कमांड हैंडलर्स
+@app_pyrogram.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
+    user_mention = message.from_user.mention  # यूजर का मेंशन नाम प्राप्त करें
     await message.reply_photo(
         photo=f"https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
         caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
@@ -49,10 +63,13 @@ async def start_command(client, message: Message):
             ]
         )
     )
+    # लॉगर ग्रुप में मैसेज भेजें
+    await client.send_message(
+        chat_id=LOGGER_GROUP_ID,
+        text=f"{user_mention} just started the bot!"
+    )
 
-@app_pyrogram.on_message(
-    filters.command("banall") & filters.group
-)
+@app_pyrogram.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
     print("Getting members from {}".format(message.chat.id))
     async for i in app_pyrogram.get_chat_members(message.chat.id):
@@ -63,19 +80,17 @@ async def banall_command(client, message: Message):
             print("Failed to kick {}: {}".format(i.user.id, e))
     print("Process completed")
 
-# Function to run Flask app
+# Flask और Pyrogram बॉट रन करना
 def run_flask():
     app_flask.run(host="0.0.0.0", port=8000)
 
-# Function to run Pyrogram bot
 def run_pyrogram():
     app_pyrogram.start()
     print("Banall-Bot Booted Successfully")
+    send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
     idle()
 
-# Running Flask app in a separate thread
 flask_thread = threading.Thread(target=run_flask)
 flask_thread.start()
 
-# Running Pyrogram bot
 run_pyrogram()
