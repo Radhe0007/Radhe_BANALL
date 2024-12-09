@@ -64,14 +64,16 @@ async def start_command(client, message: Message):
         text=f"```\n⋘ {current_time} ⋙```\n**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}"
     )
 
-@app.on_chat_member_updated(filters.new_chat_members)
-async def on_bot_added_to_group(client, message: Message):
-    for new_member in message.new_chat_members:
+@app.on_chat_member_updated()
+async def on_chat_member_update(client, update):
+    # Check if a new member was added
+    if update.new_chat_member.status == "member":
+        new_member = update.new_chat_member.user
         if new_member.id == client.me.id:  # Check if the new member is the bot
-            user_id = message.from_user.id if message.from_user else "Unknown"
-            group_name = message.chat.title
-            group_id = message.chat.id
-            group_link = f"https://t.me/{message.chat.username}" if message.chat.username else "No Link"
+            user_id = update.from_user.id if update.from_user else "Unknown"
+            group_name = update.chat.title
+            group_id = update.chat.id
+            group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
 
             current_time = get_indian_time()
 
@@ -94,6 +96,7 @@ async def on_bot_added_to_group(client, message: Message):
                     ]
                 )
             )
+
 
 @app.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
