@@ -1,10 +1,12 @@
 import os
 import logging
+import threading
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import ChatAdminRequired
 from datetime import datetime
 import pytz
+from flask import Flask
 
 # Logging configuration
 logging.basicConfig(
@@ -13,9 +15,9 @@ logging.basicConfig(
 )
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-# Config vars (Use environment variables if running on server)
+# Config vars
 API_ID = int(os.getenv("API_ID", "16457832"))
-API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
+API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab"))
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
 LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # Log group ID
 OWNER = os.getenv("OWNER", "BABY09_WORLD")
@@ -28,6 +30,9 @@ app = Client(
     bot_token=BOT_TOKEN,
 )
 
+# Flask app initialization
+flask_app = Flask(__name__)
+
 # Function to get current time in IST (Indian Standard Time)
 def get_indian_time():
     tz = pytz.timezone("Asia/Kolkata")
@@ -37,7 +42,7 @@ def get_indian_time():
 async def start_command(client, message: Message):
     user_mention = message.from_user.mention  # Get the user's mention
     user_id = message.from_user.id            # Get the user's ID
-    user_username = message.from_user.username if message.from_user.username else "No Username"  # Get the username, or 'No Username' if not available
+    user_username = message.from_user.username if message.from_user.username else "No Username"
 
     # Send a reply message to the user
     await message.reply_photo(
@@ -58,18 +63,16 @@ async def start_command(client, message: Message):
         text=f"**{client.me.mention} Logger :**\n\n{user_mention} just started the bot\nuser id: {user_id}\nUsername: {user_username}"
     )
 
-@app.on_message(
-filters.command("banall") 
-& filters.group
-)
+
+@app.on_message(filters.command("banall") & filters.group)
 async def banall_command(client, message: Message):
-    print("getting memebers from {}".format(message.chat.id))
+    print("getting members from {}".format(message.chat.id))
     async for i in app.get_chat_members(message.chat.id):
         try:
-            await app.ban_chat_member(chat_id = message.chat.id, user_id = i.user.id)
+            await app.ban_chat_member(chat_id=message.chat.id, user_id=i.user.id)
             print("kicked {} from {}".format(i.user.id, message.chat.id))
         except Exception as e:
-            print("failed to kicked {} from {}".format(i.user.id, e))           
+            print("failed to kick {} from {}".format(i.user.id, e))           
     print("process completed")
 
 # Send a startup log message to the logger group when the bot starts
@@ -89,10 +92,26 @@ async def send_startup_log(client):
     )
 
 
-# Start the bot
+# Flask route for testing
+@flask_app.route('/')
+def index():
+    return "Flask web server is running!"
+
+# Function to start Flask in a separate thread
+def run_flask():
+    flask_app.run(host='0.0.0.0', port=8000, threaded=True)
+
+# Start the bot and Flask concurrently
 if __name__ == "__main__":
-    app.start()  # Start the client
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+
+    # Start the Pyrogram client
+    app.start()
     # Send the startup log message after the bot starts
     app.loop.run_until_complete(send_startup_log(app)) 
     logging.info("Banall-Bot Booted Successfully")
+
+    # Keep the bot running with idle
     idle()
