@@ -64,7 +64,7 @@ async def start_command(client, message: Message):
         text=f"```\n⋘ {current_time} ⋙```\n**【{client.me.mention} Lᴏɢɢᴇʀ :】**\n\n{user_mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ\n**➥ ᴜsᴇʀ_ɪᴅ:** {user_id}\n**➥ ᴜsᴇʀɴᴀᴍᴇ:** @{user_username}"
     )
 
-@app.on_chat_member_update(filters.new_chat_members)
+@app.on_chat_member_updated(filters.new_chat_members)
 async def on_bot_added_to_group(client, message: Message):
     for new_member in message.new_chat_members:
         if new_member.id == client.me.id:  # Check if the new member is the bot
