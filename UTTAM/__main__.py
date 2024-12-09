@@ -41,6 +41,7 @@ def get_indian_time():
 @app.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
     user_mention = message.from_user.mention  # Get the user's mention
+    current_time = get_indian_time()
     user_id = message.from_user.id            # Get the user's ID
     user_username = message.from_user.username if message.from_user.username else "No Username"
 
