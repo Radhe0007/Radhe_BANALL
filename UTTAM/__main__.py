@@ -86,10 +86,10 @@ async def send_startup_log(client):
     # Send the startup log message to the logger group
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
-        text=f"**【{bot_mention} sᴛᴀʀᴛᴇᴅ】**\n"
+        text=f"```\n⋘ {current_time} ⋙```\n"
+             f"**【{bot_mention} sᴛᴀʀᴛᴇᴅ】**\n"
              f"⤥ɪᴅ: {bot_id}\n"
              f"⤥ᴜsᴇʀɴᴀᴍᴇ: {bot_username}\n"
-             f"⤥ᴛɪᴍᴇ: {current_time}"
     )
 
 
