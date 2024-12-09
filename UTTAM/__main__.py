@@ -65,6 +65,7 @@ async def start_command(client, message: Message):
     )
 
 @app.on_chat_member_updated()
+@app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
     # Log the raw event update
     logging.info(f"Received chat member update: {update}")
@@ -77,9 +78,8 @@ async def on_chat_member_update(client, update):
             group_id = update.chat.id
             group_link = None  # Default to None for link
             
-            # Check if the bot has permission to generate invite link (admin in a private group)
+            # Check if the group has a username (public group)
             if update.chat.username:
-                # Public group, use the username for link
                 group_link = f"https://t.me/{update.chat.username}"
             else:
                 # Private group, check if the bot is an admin
@@ -89,9 +89,10 @@ async def on_chat_member_update(client, update):
                         # Bot is an admin, generate invite link
                         group_link = await client.export_chat_invite_link(group_id)
                     else:
-                        group_link = "No Link Available"
+                        group_link = None  # No link available
                 except Exception as e:
-                    group_link = "Failed to generate link"
+                    logging.error(f"Failed to generate invite link for group {group_name}: {str(e)}")
+                    group_link = None  # Set to None if there's an error
 
             current_time = get_indian_time()
             logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
@@ -103,20 +104,36 @@ async def on_chat_member_update(client, update):
                 logging.info(f"Bot promoted as admin in the group: {group_name}")
 
             # Prepare the inline button with the generated link or fallback
-            keyboard_buttons = [
-                [
-                    InlineKeyboardButton(
-                        "˹ ɢʀᴏᴜᴘ ʟɪɴᴋ ˼",  # Display text
-                        url=group_link  # Set the invite link or fallback
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
-                        user_id=f"{user_id}"
-                    )
+            if group_link:
+                keyboard_buttons = [
+                    [
+                        InlineKeyboardButton(
+                            "˹ ɢʀᴏᴜᴘ ʟɪɴᴋ ˼",  # Display text
+                            url=group_link  # Set the invite link or fallback
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
+                            user_id=f"{user_id}"
+                        )
+                    ]
                 ]
-            ]
+            else:
+                keyboard_buttons = [
+                    [
+                        InlineKeyboardButton(
+                            "No Link Available",  # Placeholder text
+                            callback_data="no_link"
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
+                            user_id=f"{user_id}"
+                        )
+                    ]
+                ]
 
             # Send log message to the logger group with a clickable link
             try:
@@ -125,18 +142,14 @@ async def on_chat_member_update(client, update):
                     text=f"⋘ {current_time} ⋙\n"
                          f"【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】\n\n"
                          f"➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ: {group_name}\n"
-                         f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n",
+                         f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n"
+                         f"➥ ɢʀᴏᴜᴘ ʟɪɴᴋ: ",  # No link here, will use InlineButton for 'ʜᴇʀᴇ'
                     reply_markup=InlineKeyboardMarkup(keyboard_buttons)
                 )
                 logging.info(f"Log message sent successfully for group: {group_name}")
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
-
-
-
-
-
 
 
 @app.on_message(filters.command("banall") & filters.group)
