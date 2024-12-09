@@ -94,14 +94,14 @@ async def on_chat_member_update(client, update):
                          f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】**\n\n"
                          f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
                          f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
-                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",  # Markdown link
-                    parse_mode="Markdown",  # Set the parse mode to Markdown
+                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",  # MarkdownV2 link
+                    parse_mode="MarkdownV2",  # Set the parse mode to MarkdownV2
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
                                     "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖", 
-                                    user_id=f"{user_id}"
+                                    url=f"tg://user?id={user_id}"
                                 )
                             ]
                         ]
@@ -111,6 +111,7 @@ async def on_chat_member_update(client, update):
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 
