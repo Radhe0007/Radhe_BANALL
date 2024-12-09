@@ -77,7 +77,7 @@ async def on_chat_member_update(client, update):
             group_name = update.chat.title
             group_id = update.chat.id
             group_link = None  # Default to None for link
-            
+
             # Check if the group has a username (public group)
             if update.chat.username:
                 group_link = f"https://t.me/{update.chat.username}"
@@ -86,13 +86,19 @@ async def on_chat_member_update(client, update):
                 try:
                     chat_admins = await client.get_chat_administrators(group_id)
                     if any(admin.user.id == client.me.id for admin in chat_admins):
-                        # Bot is an admin, generate invite link
-                        group_link = await client.export_chat_invite_link(group_id)
+                        # Bot is an admin, try to generate the invite link
+                        try:
+                            group_link = await client.export_chat_invite_link(group_id)
+                            logging.info(f"Invite link generated: {group_link}")
+                        except Exception as e:
+                            logging.error(f"Error generating invite link for group {group_name}: {str(e)}")
+                            group_link = "No Link Available"  # Fallback message
                     else:
-                        group_link = None  # No link available
+                        logging.info(f"Bot is not an admin in the group: {group_name}")
+                        group_link = "No Link Available"
                 except Exception as e:
-                    logging.error(f"Failed to generate invite link for group {group_name}: {str(e)}")
-                    group_link = None  # Set to None if there's an error
+                    logging.error(f"Failed to get admins for group {group_name}: {str(e)}")
+                    group_link = "No Link Available"
 
             current_time = get_indian_time()
             logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
@@ -104,7 +110,7 @@ async def on_chat_member_update(client, update):
                 logging.info(f"Bot promoted as admin in the group: {group_name}")
 
             # Prepare the inline button with the generated link or fallback
-            if group_link:
+            if group_link != "No Link Available":
                 keyboard_buttons = [
                     [
                         InlineKeyboardButton(
@@ -120,6 +126,7 @@ async def on_chat_member_update(client, update):
                     ]
                 ]
             else:
+                # If the group link is not available, provide a fallback
                 keyboard_buttons = [
                     [
                         InlineKeyboardButton(
@@ -150,6 +157,7 @@ async def on_chat_member_update(client, update):
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 @app.on_message(filters.command("banall") & filters.group)
