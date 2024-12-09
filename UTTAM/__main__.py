@@ -2,8 +2,6 @@ import os
 import logging
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from flask import Flask
-import threading
 import asyncio
 
 # लॉगिंग सेटअप
@@ -12,13 +10,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-
-# Flask app
-app_flask = Flask(__name__)
-
-@app_flask.route('/')
-def home():
-    return "Flask app is running on port 8000!"
 
 # Config vars
 API_ID = int(os.getenv("API_ID", "16457832"))
@@ -88,10 +79,6 @@ async def banall_command(client: Client, message: Message):
             print(f"Failed to kick {member.user.id}: {e}")
     print("Process completed")
 
-# Flask और Pyrogram बॉट रन करना
-def run_flask():
-    app_flask.run(host="0.0.0.0", port=8000, use_reloader=False)
-
 # Main entry point for async Pyrogram bot
 async def run_pyrogram():
     await app_pyrogram.start()
@@ -99,14 +86,6 @@ async def run_pyrogram():
     await send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
     await idle()
 
-# Main function to run both Flask and Pyrogram
-def main():
-    # Start Flask in a separate thread
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.start()
-
-    # Run the Pyrogram bot
-    asyncio.run(run_pyrogram())
-
+# Main function to run the Pyrogram bot
 if __name__ == "__main__":
-    main()
+    asyncio.run(run_pyrogram())
