@@ -1,8 +1,7 @@
 import os
 import logging
-from pyrogram import Client, filters, idle
+from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import asyncio
 
 # लॉगिंग सेटअप
 logging.basicConfig(
@@ -15,7 +14,6 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 API_ID = int(os.getenv("API_ID", "16457832"))
 API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
-LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # लॉगर ग्रुप ID
 OWNER = os.getenv("OWNER", "BABY09_WORLD")
 
 # Pyrogram client
@@ -26,29 +24,16 @@ app_pyrogram = Client(
     bot_token=BOT_TOKEN,
 )
 
-# Function to send startup message
-async def send_startup_message():
-    bot = await app_pyrogram.get_me()  # बॉट की जानकारी प्राप्त करें
-    try:
-        await app_pyrogram.send_message(
-            chat_id=LOGGER_GROUP_ID,
-            text=f"**Bot Started**\n\n"
-                 f"**Name:** [{bot.first_name}](tg://user?id={bot.id})\n"
-                 f"**ID:** `{bot.id}`\n"
-                 f"**Username:** @{bot.username}"
-        )
-    except Exception as e:
-        logging.error(f"Failed to send startup message: {e}")
-
 # /start कमांड का हैंडलर
 @app_pyrogram.on_message(filters.command("start") & filters.private)
 async def start_command(client: Client, message: Message):
     user_mention = message.from_user.mention  # यूजर का मेंशन नाम प्राप्त करें
     try:
         logging.info("Received /start command")
+        
         # बॉट का संदेश उपयोगकर्ता को भेजें
         await message.reply_photo(
-            photo=f"https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
+            photo="https://telegra.ph/file/62e2e9fc93cd51219264f.jpg",
             caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -59,33 +44,17 @@ async def start_command(client: Client, message: Message):
                 ]
             )
         )
-        # लॉगर ग्रुप में संदेश भेजें
-        await client.send_message(
-            chat_id=LOGGER_GROUP_ID,
-            text=f"{user_mention} just started the bot!"
-        )
         logging.info(f"Start command logged for {message.from_user.id}")
     except Exception as e:
         logging.error(f"Failed to handle start command: {e}")
 
-@app_pyrogram.on_message(filters.command("banall") & filters.group)
-async def banall_command(client: Client, message: Message):
-    print(f"Getting members from {message.chat.id}")
-    async for member in client.get_chat_members(message.chat.id):
-        try:
-            await client.ban_chat_member(chat_id=message.chat.id, user_id=member.user.id)
-            print(f"Kicked {member.user.id} from {message.chat.id}")
-        except Exception as e:
-            print(f"Failed to kick {member.user.id}: {e}")
-    print("Process completed")
-
-# Main entry point for async Pyrogram bot
+# Pyrogram बॉट को चालू करने के लिए
 async def run_pyrogram():
     await app_pyrogram.start()
-    print("Banall-Bot Booted Successfully")
-    await send_startup_message()  # बॉट स्टार्ट मैसेज भेजें
-    await idle()
+    print("Bot Started Successfully")
+    await app_pyrogram.idle()  # Pyrogram idle method, जो बॉट को चालू रखेगा
 
-# Main function to run the Pyrogram bot
+# मुख्य एंट्री पॉइंट
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(run_pyrogram())
