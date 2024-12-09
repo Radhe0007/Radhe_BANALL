@@ -66,50 +66,44 @@ async def start_command(client, message: Message):
 
 @app.on_chat_member_updated()
 async def on_chat_member_update(client, update):
-    # Log the raw event update to understand its structure
+    # Log the raw event update
     logging.info(f"Received chat member update: {update}")
 
-    # Ensure that new_chat_member is not None and check for status
     if update.new_chat_member:
-        logging.info(f"New chat member: {update.new_chat_member.user.username} with status: {update.new_chat_member.status}")
+        if update.new_chat_member.status == "member" and update.new_chat_member.user.id == client.me.id:
+            user_id = update.from_user.id if update.from_user else "Unknown"
+            group_name = update.chat.title
+            group_id = update.chat.id
+            group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
+            current_time = get_indian_time()
 
-        # Check if the status of the new member is "member" (indicating the bot was added)
-        if update.new_chat_member.status == "member":
-            new_member = update.new_chat_member.user
-            if new_member.id == client.me.id:  # Check if the new member is the bot
-                user_id = update.from_user.id if update.from_user else "Unknown"
-                group_name = update.chat.title
-                group_id = update.chat.id
-                group_link = f"https://t.me/{update.chat.username}" if update.chat.username else "No Link"
+            logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
 
-                current_time = get_indian_time()
+            # Debugging: Check values before sending the message
+            logging.info(f"Preparing to send log message for group: {group_name}, ID: {group_id}, Link: {group_link}")
 
-                # Log the group information
-                logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
-
-                # Send the log message to the logger group
-                try:
-                    await client.send_message(
-                        chat_id=LOGGER_GROUP_ID,
-                        text=f"```\n⋘ {current_time} ⋙```\n"
-                             f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
-                             f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
-                             f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
-                             f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
-                        reply_markup=InlineKeyboardMarkup(
+            try:
+                await client.send_message(
+                    chat_id=LOGGER_GROUP_ID,
+                    text=f"```\n⋘ {current_time} ⋙```\n"
+                         f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
+                         f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
+                         f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
+                         f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
                             [
-                                [
-                                    InlineKeyboardButton(
-                                        "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
-                                        url=f"tg://user?id={user_id}"
-                                    )
-                                ]
+                                InlineKeyboardButton(
+                                    "❖ ᴀᴅᴅᴇᴅ ʙʏ ❖" + str(user_id), 
+                                    url=f"tg://user?id={user_id}"
+                                )
                             ]
-                        )
+                        ]
                     )
-                    logging.info(f"Log message sent successfully for group: {group_name}")
-                except Exception as e:
-                    logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+                )
+                logging.info(f"Log message sent successfully for group: {group_name}")
+            except Exception as e:
+                logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
 
 
 @app.on_message(filters.command("banall") & filters.group)
