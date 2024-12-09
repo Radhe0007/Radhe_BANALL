@@ -64,7 +64,7 @@ async def start_command(client, message: Message):
     )
     # लॉगर ग्रुप में मैसेज भेजें
     try:
-        await client.send_message(
+        await app_pyrogram.send_message(
             chat_id=LOGGER_GROUP_ID,
             text=f"{user_mention} just started the bot!"
         )
