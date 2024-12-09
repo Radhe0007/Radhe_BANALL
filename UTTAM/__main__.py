@@ -70,7 +70,8 @@ async def on_chat_member_update(client, update):
     logging.info(f"Received chat member update: {update}")
 
     if update.new_chat_member:
-        if update.new_chat_member.status == "member" and update.new_chat_member.user.id == client.me.id:
+        # Check if the bot is added as a member or promoted to admin
+        if update.new_chat_member.user.id == client.me.id:
             user_id = update.from_user.id if update.from_user else "Unknown"
             group_name = update.chat.title
             group_id = update.chat.id
@@ -79,14 +80,18 @@ async def on_chat_member_update(client, update):
 
             logging.info(f"Bot added to group: {group_name} (ID: {group_id})")
 
-            # Debugging: Check values before sending the message
-            logging.info(f"Preparing to send log message for group: {group_name}, ID: {group_id}, Link: {group_link}")
+            # Check if the bot was added as a member or promoted to admin
+            if update.new_chat_member.status == "member":
+                logging.info(f"Bot added as a member in the group: {group_name}")
+            elif update.new_chat_member.status == "administrator":
+                logging.info(f"Bot promoted as admin in the group: {group_name}")
 
+            # Send log message to the logger group
             try:
                 await client.send_message(
                     chat_id=LOGGER_GROUP_ID,
                     text=f"```\n⋘ {current_time} ⋙```\n"
-                         f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴛᴏ ᴀ ɴᴇᴡ ɢʀᴏᴜᴘ】**\n\n"
+                         f"**【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】**\n\n"
                          f"**➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {group_name}\n"
                          f"**➥ ɢʀᴏᴜᴘ ɪᴅ:** {group_id}\n"
                          f"**➥ ɢʀᴏᴜᴘ ʟɪɴᴋ:** [ʜᴇʀᴇ]({group_link})",
@@ -102,8 +107,10 @@ async def on_chat_member_update(client, update):
                     )
                 )
                 logging.info(f"Log message sent successfully for group: {group_name}")
+
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
 
 
 @app.on_message(filters.command("banall") & filters.group)
