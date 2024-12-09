@@ -130,7 +130,7 @@ async def on_chat_member_update(client, update):
                 keyboard_buttons = [
                     [
                         InlineKeyboardButton(
-                            "No Link Available",  # Placeholder text
+                            "Nᴏ ʟɪɴᴋ [ᴘʀɪᴠɪᴛᴇ ɢʀᴏᴜᴘ]",  # Placeholder text
                             callback_data="no_link"
                         )
                     ],
@@ -146,7 +146,7 @@ async def on_chat_member_update(client, update):
             try:
                 await client.send_message(
                     chat_id=LOGGER_GROUP_ID,
-                    text=f"⋘ {current_time} ⋙\n"
+                    text=f"```⋘ {current_time} ⋙```\n"
                          f"【{client.me.mention} ᴀᴅᴅᴇᴅ ᴏʀ ᴘʀᴏᴍᴏᴛᴇᴅ ᴛᴏ ᴀᴅᴍɪɴ】\n\n"
                          f"➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ: {group_name}\n"
                          f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n"
@@ -157,6 +157,45 @@ async def on_chat_member_update(client, update):
 
             except Exception as e:
                 logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
+
+
+
+elif update.old_chat_member and update.old_chat_member.user.id == client.me.id:
+        group_name = update.chat.title
+        group_id = update.chat.id
+        current_time = get_indian_time()
+
+        # Identify who removed the bot
+        remover_id = update.from_user.id if update.from_user else "Unknown"
+
+        if update.old_chat_member.status == "member":
+            logging.info(f"Bot removed from group: {group_name}")
+        elif update.old_chat_member.status == "administrator":
+            logging.info(f"Bot removed as admin in group: {group_name}")
+
+        try:
+            # Log the bot's removal from the group
+            keyboard_buttons = [
+                [
+                    InlineKeyboardButton(
+                        "❖ ʀᴇᴍᴏᴠᴇᴅ ʙʏ ❖", 
+                        user_id=f"{remover_id}"  # Button with user_id of the person who removed the bot
+                    )
+                ]
+            ]
+
+            await client.send_message(
+                chat_id=LOGGER_GROUP_ID,
+                text=f"```⋘ {current_time} ⋙```\n"
+                     f"【{client.me.mention} ʀᴇᴍᴏᴠᴇᴅ ᴏʀ ʟᴇғᴛ ɢʀᴏᴜᴘ】\n\n"
+                     f"➥ ɢʀᴏᴜᴘ ɴᴀᴍᴇ: {group_name}\n"
+                     f"➥ ɢʀᴏᴜᴘ ɪᴅ: {group_id}\n",
+                reply_markup=InlineKeyboardMarkup(keyboard_buttons)
+            )
+            logging.info(f"Log message sent successfully for group: {group_name}")
+
+        except Exception as e:
+            logging.error(f"Failed to send log message for group {group_name}: {str(e)}")
 
 
 
