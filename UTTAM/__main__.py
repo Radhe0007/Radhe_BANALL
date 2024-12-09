@@ -87,9 +87,9 @@ async def send_startup_log(client):
     await client.send_message(
         chat_id=LOGGER_GROUP_ID,
         text=f"```\n⋘ {current_time} ⋙```\n"
-             f"**【{bot_mention} sᴛᴀʀᴛᴇᴅ】**\n"
-             f"⤥ɪᴅ: {bot_id}\n"
-             f"⤥ᴜsᴇʀɴᴀᴍᴇ: {bot_username}\n"
+             f"**【{bot_mention} sᴛᴀʀᴛᴇᴅ】**\n\n"
+             f"➥ ɪᴅ: {bot_id}\n"
+             f"➥ ᴜsᴇʀɴᴀᴍᴇ: @{bot_username}\n"
     )
 
 
