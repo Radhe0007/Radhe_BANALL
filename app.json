@@ -2,7 +2,7 @@
     "name": "sᴀᴛʏᴀ ʙᴀɴ ᴀʟʟ",
     "description": "sɪᴍᴘʟᴇ ʙᴏᴛ ᴛᴏ ʙᴀɴ ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴛʜᴇ ᴡʜᴏʟᴇ ᴄʜᴀᴛs",
     "logo": "https://files.catbox.moe/f932t8.jpg",
-    "keywords": ["˹ ʙᴀʙʏ-ᴍᴜsɪᴄ ™˼", "ʙᴀɴ-ᴀʟʟ"],
+    "keywords": ["ʙᴏᴛ-ᴄʜᴀᴍʙᴇʀ", "ʙᴀɴ-ᴀʟʟ"],
     "repository": "https://github.com/BABY-MUSIC/SATYA_BANALL",
     "stack": "container",
     "env": {
@@ -11,7 +11,7 @@
             "required": true
         },
         "OWNER": {
-            "description": "ᴛʏᴘᴇ ʏᴏᴜʀ ᴜsᴇʀɴᴀᴍᴇ ᴡɪᴛʜᴏᴜᴛ @ [UTTAM470]",
+            "description": "ᴛʏᴘᴇ ʏᴏᴜʀ ᴜsᴇʀɴᴀᴍᴇ ᴡɪᴛʜᴏᴜᴛ @ [ll_RADHE7_ll]",
             "required": true,
             "value": ""
         },
