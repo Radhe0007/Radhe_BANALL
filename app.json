@@ -3,7 +3,7 @@
     "description": "sɪᴍᴘʟᴇ ʙᴏᴛ ᴛᴏ ʙᴀɴ ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴛʜᴇ ᴡʜᴏʟᴇ ᴄʜᴀᴛs",
     "logo": "https://files.catbox.moe/f932t8.jpg",
     "keywords": ["ʙᴏᴛ-ᴄʜᴀᴍʙᴇʀ", "ʙᴀɴ-ᴀʟʟ"],
-    "repository": "https://github.com/BABY-MUSIC/SATYA_BANALL",
+    "repository": "https://github.com/Radhe0007/Radhe_BANALL",
     "stack": "container",
     "env": {
         "BOT_TOKEN": {
