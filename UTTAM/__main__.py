@@ -16,11 +16,11 @@ logging.basicConfig(
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 # Config vars
-API_ID = int(os.getenv("API_ID", "16457832"))
-API_HASH = os.getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7538146982:AAGeiAfuNVs-gEK1gfOHcPuwbv_5JCv2nvo")
-LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002043570167"))  # Log group ID
-OWNER = os.getenv("OWNER", "BABY09_WORLD")
+API_ID = int(os.getenv("API_ID", "28980049"))
+API_HASH = os.getenv("API_HASH", "fdca5bec993fa2e9930b4bd87a494d23")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7731557962:AAFFyMSQSYdwkbID5UbcqInaMKhGZJ-5EWI")
+LOGGER_GROUP_ID = int(os.getenv("LOGGER_GROUP_ID", "-1002309133745"))  # Log group ID
+OWNER = os.getenv("OWNER", "ll_RADHE7_ll")
 
 # Pyrogram client initialization
 app = Client(
@@ -48,11 +48,11 @@ async def start_command(client, message: Message):
     # Send a reply message to the user
     await message.reply_photo(
         photo="https://files.catbox.moe/3zu85t.jpg",
-        caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) • \n╰───────────────────⦿",
+        caption=f"╭───────────────────⦿\n│❍ • ʜᴇʏ ᴛʜɪs ɪs ᴀ sɪᴍᴘʟᴇ ʙᴀɴ •\n│❍ • ᴀʟʟ ʙᴏᴛ ᴡʜɪᴄʜ ɪs ʙᴀsᴇᴅ ᴏɴ •\n│• ᴘʏʀᴏɢʀᴀᴍ •\n│❍ • ʟɪʙʀᴀʀʏ ᴛᴏ ʙᴀɴ ᴏʀ ᴅᴇsᴛʀᴏʏ •\n│❍ • ᴀʟʟ ᴛʜᴇ ᴍᴇᴍʙᴇʀs ғʀᴏᴍ ᴀ ɢʀᴘ •\n│• ᴡɪᴛʜ ɪɴ ᴀ ғᴇᴡ sᴇᴄᴏɴᴅs •\n│❍ • ɴᴏ sᴛᴏᴘ + ɴᴏ ʟᴀɢ •\n├───────────────────⦿\n│❍ • ᴛʏᴘᴇ /ʙᴀɴᴀʟʟ ᴛᴏ ꜱᴇᴇ ᴍᴀɢɪᴄ ɪɴ │ • ɢʀᴏᴜᴘ •\n│❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➛ [ʙᴏᴛ-ᴄʜᴀᴍʙᴇʀ](https://t.me/ll_BOTCHAMBER_ll) • \n╰───────────────────⦿",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("˹ ʙᴀʙʏ-ᴍᴜsɪᴄ ™˼𓅂│ᴜᴘᴅᴀᴛᴇ│", url=f"https://t.me/{OWNER}")
+                    InlineKeyboardButton("˹ ʙᴏᴛ-ᴄʜᴀᴍʙᴇʀ│ᴜᴘᴅᴀᴛᴇ│", url=f"https://t.me/{OWNER}")
                 ]       
             ]
         )
